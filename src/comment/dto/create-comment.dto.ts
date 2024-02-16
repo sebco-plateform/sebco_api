@@ -10,21 +10,21 @@ export class CreateCommentDto {
   date: string;
   @IsOptional()
   @IsNumber({}, { message: 'id is not empty' })
-  promotionArticle: number;
+  promotionArticle_id: number;
 
   @IsOptional()
   @IsNumber({}, { message: 'id is not empty' })
-  user: number;
+  user_id: number;
 
   @IsOptional()
   @IsNumber({}, { message: 'id is not empty' })
-  order: number;
+  order_id: number;
 
   @IsOptional()
   @IsNumber({}, { message: 'id is not empty' })
-  article: number;
+  article_id: number;
 
   @IsOptional()
   @IsNumber({}, { message: 'id is not empty' })
-  person: number;
+  person_id: number;
 }

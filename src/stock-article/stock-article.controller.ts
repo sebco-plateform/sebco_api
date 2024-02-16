@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { StockArticleService } from './stock-article.service';
 import { CreateStockArticleDto } from './dto/create-stock-article.dto';
 import { UpdateStockArticleDto } from './dto/update-stock-article.dto';
@@ -7,28 +15,31 @@ import { UpdateStockArticleDto } from './dto/update-stock-article.dto';
 export class StockArticleController {
   constructor(private readonly stockArticleService: StockArticleService) {}
 
-  @Post()
-  create(@Body() createStockArticleDto: CreateStockArticleDto) {
-    return this.stockArticleService.create(createStockArticleDto);
+  @Post('/add')
+  async create(@Body() createStockArticleDto: CreateStockArticleDto) {
+    return await this.stockArticleService.create(createStockArticleDto);
   }
 
-  @Get()
-  findAll() {
-    return this.stockArticleService.findAll();
+  @Get('/all')
+  async findAll() {
+    return await this.stockArticleService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.stockArticleService.findOne(+id);
+  @Get('/single/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.stockArticleService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStockArticleDto: UpdateStockArticleDto) {
-    return this.stockArticleService.update(+id, updateStockArticleDto);
+  @Patch('/upate/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateStockArticleDto: UpdateStockArticleDto,
+  ) {
+    return await this.stockArticleService.update(+id, updateStockArticleDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.stockArticleService.remove(+id);
+  @Delete('/delete/:id')
+  async remove(@Param('id') id: string) {
+    return await this.stockArticleService.remove(+id);
   }
 }

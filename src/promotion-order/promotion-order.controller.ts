@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PromotionOrderService } from './promotion-order.service';
 import { CreatePromotionOrderDto } from './dto/create-promotion-order.dto';
 import { UpdatePromotionOrderDto } from './dto/update-promotion-order.dto';
@@ -7,28 +15,34 @@ import { UpdatePromotionOrderDto } from './dto/update-promotion-order.dto';
 export class PromotionOrderController {
   constructor(private readonly promotionOrderService: PromotionOrderService) {}
 
-  @Post()
-  create(@Body() createPromotionOrderDto: CreatePromotionOrderDto) {
-    return this.promotionOrderService.create(createPromotionOrderDto);
+  @Post('/add')
+  async create(@Body() createPromotionOrderDto: CreatePromotionOrderDto) {
+    return await this.promotionOrderService.create(createPromotionOrderDto);
   }
 
-  @Get()
-  findAll() {
-    return this.promotionOrderService.findAll();
+  @Get('/all')
+  async findAll() {
+    return await this.promotionOrderService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.promotionOrderService.findOne(+id);
+  @Get('/single/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.promotionOrderService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePromotionOrderDto: UpdatePromotionOrderDto) {
-    return this.promotionOrderService.update(+id, updatePromotionOrderDto);
+  @Patch('/update/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePromotionOrderDto: UpdatePromotionOrderDto,
+  ) {
+    return await this.promotionOrderService.update(
+      +id,
+      updatePromotionOrderDto,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.promotionOrderService.remove(+id);
+  @Delete('/delete/:id')
+  async remove(@Param('id') id: string) {
+    return await this.promotionOrderService.remove(+id);
   }
 }

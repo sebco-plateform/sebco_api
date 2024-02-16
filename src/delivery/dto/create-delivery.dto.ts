@@ -1,10 +1,10 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export interface OrderStatus {
+/*export interface OrderStatus {
   PASS: 'pass';
   DONE: 'done';
   CANCEL: 'cancel';
-}
+}*/
 export class CreateDeliveryDto {
   @IsNotEmpty({ message: ' the city is not empty' })
   @IsString({ message: ' the city is string' })
@@ -44,7 +44,7 @@ export class CreateDeliveryDto {
 
   @IsNotEmpty({ message: 'the status is not empty' })
   @IsString({ message: 'the status is string' })
-  status: OrderStatus;
+  status: string;
 
   @IsNotEmpty({ message: 'the description is not empty' })
   @IsString({ message: 'the description is string' })

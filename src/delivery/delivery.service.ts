@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDeliveryDto } from './dto/create-delivery.dto';
 import { UpdateDeliveryDto } from './dto/update-delivery.dto';
+import { UserService } from 'src/user/user.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Delivery } from './entities/delivery.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class DeliveryService {
-  create(createDeliveryDto: CreateDeliveryDto) {
-    return 'This action adds a new delivery';
+  constructor(private readonly userService: UserService) {}
+
+  @InjectRepository(Delivery)
+  private readonly deliveryRepository: Repository<Delivery>;
+
+  async create(createDeliveryDto: CreateDeliveryDto) {
+    const delivery = this.deliveryRepository.create(createDeliveryDto);
+
+    const user = await this.userService.findOne(createDeliveryDto.user_id);
+    delivery.user = user;
+    return await this.deliveryRepository.save(delivery);
   }
 
-  findAll() {
-    return `This action returns all delivery`;
+  async findAll() {
+    return await this.deliveryRepository.find({
+      relations: ['user'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} delivery`;
+  async findOne(id: number) {
+    const delivery = await this.deliveryRepository.findOneBy({ id });
+    if (!delivery) throw new NotFoundException('delivery not found');
+    return delivery;
   }
 
-  update(id: number, updateDeliveryDto: UpdateDeliveryDto) {
-    return `This action updates a #${id} delivery`;
+  async update(id: number, updateDeliveryDto: UpdateDeliveryDto) {
+    const delivery = await this.findOne(id);
+    this.deliveryRepository.merge(delivery, updateDeliveryDto);
+    return await this.deliveryRepository.save(delivery);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} delivery`;
+  async remove(id: number) {
+    const delivery = await this.findOne(id);
+    await this.deliveryRepository.remove(delivery);
+    return delivery;
   }
 }

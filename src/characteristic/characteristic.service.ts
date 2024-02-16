@@ -1,26 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCharacteristicDto } from './dto/create-characteristic.dto';
 import { UpdateCharacteristicDto } from './dto/update-characteristic.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Characteristic } from './entities/characteristic.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CharacteristicService {
-  create(createCharacteristicDto: CreateCharacteristicDto) {
-    return 'This action adds a new characteristic';
+  @InjectRepository(Characteristic)
+  private readonly characteristicRepository: Repository<Characteristic>;
+
+  async create(createCharacteristicDto: CreateCharacteristicDto) {
+    const charact = this.characteristicRepository.create(
+      createCharacteristicDto,
+    );
+
+    return await this.characteristicRepository.save(charact);
   }
 
-  findAll() {
-    return `This action returns all characteristic`;
+  async findAll() {
+    return await this.characteristicRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} characteristic`;
+  async findOne(id: number) {
+    const charact = await this.characteristicRepository.findOneBy({ id });
+    if (!charact) throw new NotFoundException('characteristic not found');
+    return charact;
   }
 
-  update(id: number, updateCharacteristicDto: UpdateCharacteristicDto) {
-    return `This action updates a #${id} characteristic`;
+  async update(id: number, updateCharacteristicDto: UpdateCharacteristicDto) {
+    const charact = await this.findOne(id);
+    this.characteristicRepository.merge(charact, updateCharacteristicDto);
+    return await this.characteristicRepository.save(charact);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} characteristic`;
+  async remove(id: number) {
+    const charact = await this.findOne(id);
+    await this.characteristicRepository.remove(charact);
+    return charact;
   }
 }

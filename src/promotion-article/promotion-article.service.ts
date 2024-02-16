@@ -9,12 +9,16 @@ import { Repository } from 'typeorm';
 export class PromotionArticleService {
   @InjectRepository(PromotionArticle)
   private readonly promotionArticleRepository: Repository<PromotionArticle>;
-  create(createPromotionArticleDto: CreatePromotionArticleDto) {
-    return `This action adds a ${createPromotionArticleDto}new promotionArticle`;
+
+  async create(createPromotionArticleDto: CreatePromotionArticleDto) {
+    const promoArti = this.promotionArticleRepository.create(
+      createPromotionArticleDto,
+    );
+    return await this.promotionArticleRepository.save(promoArti);
   }
 
-  findAll() {
-    return `This action returns all promotionArticle`;
+  async findAll() {
+    return await this.promotionArticleRepository.find();
   }
 
   async findOne(id: number) {
@@ -23,11 +27,18 @@ export class PromotionArticleService {
     return promoArti;
   }
 
-  update(id: number, updatePromotionArticleDto: UpdatePromotionArticleDto) {
-    return `This action updates a #${id} promotionArticle`;
+  async update(
+    id: number,
+    updatePromotionArticleDto: UpdatePromotionArticleDto,
+  ) {
+    const promoArti = await this.findOne(id);
+    this.promotionArticleRepository.merge(promoArti, updatePromotionArticleDto);
+    return await this.promotionArticleRepository.save(promoArti);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} promotionArticle`;
+  async remove(id: number) {
+    const promoArti = await this.findOne(id);
+    await this.promotionArticleRepository.remove(promoArti);
+    return promoArti;
   }
 }

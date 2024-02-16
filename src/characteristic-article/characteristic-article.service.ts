@@ -1,26 +1,69 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCharacteristicArticleDto } from './dto/create-characteristic-article.dto';
 import { UpdateCharacteristicArticleDto } from './dto/update-characteristic-article.dto';
+import { CharacteristicService } from 'src/characteristic/characteristic.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CharacteristicArticle } from './entities/characteristic-article.entity';
+import { Repository } from 'typeorm';
+import { ArticleService } from 'src/article/article.service';
 
 @Injectable()
 export class CharacteristicArticleService {
-  create(createCharacteristicArticleDto: CreateCharacteristicArticleDto) {
-    return 'This action adds a new characteristicArticle';
+  constructor(
+    private readonly characteristicService: CharacteristicService,
+    private readonly articleService: ArticleService,
+  ) {}
+  @InjectRepository(CharacteristicArticle)
+  private readonly characteristicArticleRepositori: Repository<CharacteristicArticle>;
+
+  async create(createCharacteristicArticleDto: CreateCharacteristicArticleDto) {
+    const charatArticle = this.characteristicArticleRepositori.create(
+      createCharacteristicArticleDto,
+    );
+    const characteristic = await this.characteristicService.findOne(
+      createCharacteristicArticleDto.characteristic_id,
+    );
+
+    const article = await this.articleService.findOne(
+      createCharacteristicArticleDto.article_id,
+    );
+
+    charatArticle.characteristic = characteristic;
+    charatArticle.article = article;
+    return await this.characteristicArticleRepositori.save(characteristic);
   }
 
-  findAll() {
-    return `This action returns all characteristicArticle`;
+  async findAll() {
+    return await this.characteristicArticleRepositori.find({
+      relations: ['characteristic', 'article'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} characteristicArticle`;
+  async findOne(id: number) {
+    const characArtic = await this.characteristicArticleRepositori.findOneBy({
+      id,
+    });
+
+    if (!characArtic)
+      throw new NotFoundException('characteristic article not found');
+    return characArtic;
   }
 
-  update(id: number, updateCharacteristicArticleDto: UpdateCharacteristicArticleDto) {
-    return `This action updates a #${id} characteristicArticle`;
+  async update(
+    id: number,
+    updateCharacteristicArticleDto: UpdateCharacteristicArticleDto,
+  ) {
+    const charac = await this.findOne(id);
+    this.characteristicArticleRepositori.merge(
+      charac,
+      updateCharacteristicArticleDto,
+    );
+    return charac;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} characteristicArticle`;
+  async remove(id: number) {
+    const charac = await this.findOne(id);
+    await this.characteristicArticleRepositori.remove(charac);
+    return charac;
   }
 }

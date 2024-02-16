@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePromotionDto } from './dto/create-promotion.dto';
 import { UpdatePromotionDto } from './dto/update-promotion.dto';
+import { PromotionArticleService } from 'src/promotion-article/promotion-article.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Promotion } from './entities/promotion.entity';
 
 @Injectable()
 export class PromotionService {
-  create(createPromotionDto: CreatePromotionDto) {
-    return 'This action adds a new promotion';
+  constructor(
+    private readonly promotionArticleService: PromotionArticleService,
+  ) {}
+
+  @InjectRepository(Promotion)
+  private readonly promotionRepository: Repository<Promotion>;
+
+  async create(createPromotionDto: CreatePromotionDto) {
+    const promoArt = this.promotionRepository.create(createPromotionDto);
+    const promoArticle = await this.promotionArticleService.findOne(
+      createPromotionDto.promotionArticle_id,
+    );
+    promoArt.promotionArticle = promoArticle;
+    return await this.promotionRepository.save(promoArt);
   }
 
-  findAll() {
-    return `This action returns all promotion`;
+  async findAll() {
+    return await this.promotionRepository.find({
+      relations: ['prmotionArticle'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} promotion`;
+  async findOne(id: number) {
+    const promoArt = await this.promotionRepository.findOneBy({ id });
+    if (!promoArt) throw new NotFoundException('prmotion article not found');
+    return promoArt;
   }
 
-  update(id: number, updatePromotionDto: UpdatePromotionDto) {
-    return `This action updates a #${id} promotion`;
+  async update(id: number, updatePromotionDto: UpdatePromotionDto) {
+    const promoArt = await this.findOne(id);
+    this.promotionRepository.merge(promoArt, updatePromotionDto);
+    return await this.promotionRepository.save(promoArt);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} promotion`;
+  async remove(id: number) {
+    const promoArt = await this.findOne(id);
+    await this.promotionRepository.remove(promoArt);
+    return promoArt;
   }
 }

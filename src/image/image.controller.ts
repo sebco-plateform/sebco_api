@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ImageService } from './image.service';
 import { CreateImageDto } from './dto/create-image.dto';
 import { UpdateImageDto } from './dto/update-image.dto';
@@ -7,28 +15,31 @@ import { UpdateImageDto } from './dto/update-image.dto';
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
 
-  @Post()
-  create(@Body() createImageDto: CreateImageDto) {
-    return this.imageService.create(createImageDto);
+  @Post('/add')
+  async create(@Body() createImageDto: CreateImageDto) {
+    return await this.imageService.create(createImageDto);
   }
 
-  @Get()
-  findAll() {
-    return this.imageService.findAll();
+  @Get('/all')
+  async findAll() {
+    return await this.imageService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.imageService.findOne(+id);
+  @Get('/single/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.imageService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateImageDto: UpdateImageDto) {
-    return this.imageService.update(+id, updateImageDto);
+  @Patch('/update/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateImageDto: UpdateImageDto,
+  ) {
+    return await this.imageService.update(+id, updateImageDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.imageService.remove(+id);
+  @Delete('/delete/:id')
+  async remove(@Param('id') id: string) {
+    return await this.imageService.remove(+id);
   }
 }

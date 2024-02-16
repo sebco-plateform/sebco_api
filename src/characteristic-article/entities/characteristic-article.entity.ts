@@ -1,4 +1,5 @@
 import {
+  Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
@@ -12,6 +13,9 @@ import { Characteristic } from '../../characteristic/entities/characteristic.ent
 export class CharacteristicArticle {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ nullable: true })
+  description: string;
 
   @ManyToOne(() => Article, (artic) => artic.characteristicArticle)
   article: Article;

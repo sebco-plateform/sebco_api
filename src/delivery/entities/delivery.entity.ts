@@ -3,13 +3,10 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
-import { Order } from '../../order/entities/order.entity';
 
 @Entity()
 export class Delivery {

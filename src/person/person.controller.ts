@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PersonService } from './person.service';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { UpdatePersonDto } from './dto/update-person.dto';
@@ -7,28 +15,31 @@ import { UpdatePersonDto } from './dto/update-person.dto';
 export class PersonController {
   constructor(private readonly personService: PersonService) {}
 
-  @Post()
-  create(@Body() createPersonDto: CreatePersonDto) {
-    return this.personService.create(createPersonDto);
+  @Post('/add')
+  async create(@Body() createPersonDto: CreatePersonDto) {
+    return await this.personService.create(createPersonDto);
   }
 
-  @Get()
-  findAll() {
-    return this.personService.findAll();
+  @Get('/all')
+  async findAll() {
+    return await this.personService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.personService.findOne(+id);
+  @Get('/single/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.personService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePersonDto: UpdatePersonDto) {
-    return this.personService.update(+id, updatePersonDto);
+  @Patch('/update/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePersonDto: UpdatePersonDto,
+  ) {
+    return await this.personService.update(+id, updatePersonDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.personService.remove(+id);
+  @Delete('/remove/:id')
+  async remove(@Param('id') id: string) {
+    return await this.personService.remove(+id);
   }
 }

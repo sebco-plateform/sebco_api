@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateImageDto {
   @IsNotEmpty({ message: 'image Name is required' })
@@ -11,9 +11,11 @@ export class CreateImageDto {
 
   @IsNotEmpty({ message: 'category id is required' })
   @IsNumber({}, { message: 'category id is number' })
+  @IsOptional()
   category_id: number;
 
   @IsNotEmpty({ message: ' article_id is required' })
   @IsNumber({}, { message: ' article_id is number' })
+  @IsOptional()
   article_id: number;
 }

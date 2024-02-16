@@ -4,13 +4,16 @@ export class CreatePromotionOrderDto {
   @IsNotEmpty({ message: 'is required' })
   @IsNumber({}, { message: 'is number' })
   quantity: number;
+
   @IsNotEmpty({ message: 'is required' })
   @IsNumber({}, { message: 'is number' })
   price: number;
+
   @IsNotEmpty({ message: 'is required' })
   @IsNumber({}, { message: 'is number' })
-  order: number;
+  order_id: number;
+
   @IsNotEmpty({ message: 'is required' })
   @IsNumber({}, { message: 'is number' })
-  promotionArticle: number;
+  promotionArticle_id: number;
 }
