@@ -1,26 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePromotionDto } from './dto/create-promotion.dto';
 import { UpdatePromotionDto } from './dto/update-promotion.dto';
-import { PromotionArticleService } from 'src/promotion-article/promotion-article.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Promotion } from './entities/promotion.entity';
 
 @Injectable()
 export class PromotionService {
-  constructor(
-    private readonly promotionArticleService: PromotionArticleService,
-  ) {}
+  constructor() {}
 
   @InjectRepository(Promotion)
   private readonly promotionRepository: Repository<Promotion>;
 
   async create(createPromotionDto: CreatePromotionDto) {
     const promoArt = this.promotionRepository.create(createPromotionDto);
-    const promoArticle = await this.promotionArticleService.findOne(
-      createPromotionDto.promotionArticle_id,
-    );
-    promoArt.promotionArticle = promoArticle;
     return await this.promotionRepository.save(promoArt);
   }
 

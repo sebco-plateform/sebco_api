@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { PromotionArticle } from '../../promotion-article/entities/promotion-article.entity';
 
 @Entity()
@@ -15,6 +15,6 @@ export class Promotion {
   @Column()
   description: string;
 
-  @ManyToOne(() => PromotionArticle, (promoArt) => promoArt.promotion)
-  promotionArticle: PromotionArticle;
+  @OneToMany(() => PromotionArticle, (promoArt) => promoArt.promotion)
+  promotionArticle: PromotionArticle[];
 }

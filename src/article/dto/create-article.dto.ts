@@ -20,8 +20,4 @@ export class CreateArticleDto {
   @IsNotEmpty({ message: 'the category id is required' })
   @IsNumber({}, { message: 'the category id is a number!' })
   category_id: number;
-
-  @IsNumber({}, { message: 'the promotionArticle_id is a number!' })
-  @IsOptional()
-  promotionArticle_id: number;
 }

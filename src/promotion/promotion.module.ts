@@ -3,10 +3,9 @@ import { PromotionService } from './promotion.service';
 import { PromotionController } from './promotion.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Promotion } from './entities/promotion.entity';
-import { PromotionArticleModule } from 'src/promotion-article/promotion-article.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Promotion]), PromotionArticleModule],
+  imports: [TypeOrmModule.forFeature([Promotion])],
   controllers: [PromotionController],
   providers: [PromotionService],
   exports: [TypeOrmModule, PromotionService],

@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Article } from '../../article/entities/article.entity';
 import { PromotionOrder } from '../../promotion-order/entities/promotion-order.entity';
 import { Promotion } from '../../promotion/entities/promotion.entity';
@@ -15,11 +21,15 @@ export class PromotionArticle {
   @Column()
   description: string;
 
-  @OneToMany(() => Article, (art) => art.promotionArticle)
-  article: Article[];
+  @ManyToOne(() => Article, (art) => art.promotionArticle, {
+    nullable: true,
+  })
+  article: Article;
 
-  @OneToMany(() => Promotion, (promo) => promo.promotionArticle)
-  promotion: Promotion[];
+  @ManyToOne(() => Promotion, (promo) => promo.promotionArticle, {
+    nullable: true,
+  })
+  promotion: Promotion;
 
   @OneToMany(() => Comment, (com) => com.promotionArticle)
   comment: Comment[];

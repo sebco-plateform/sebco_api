@@ -4,9 +4,16 @@ import { UpdatePromotionArticleDto } from './dto/update-promotion-article.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PromotionArticle } from './entities/promotion-article.entity';
 import { Repository } from 'typeorm';
+import { ArticleService } from 'src/article/article.service';
+import { PromotionService } from 'src/promotion/promotion.service';
 
 @Injectable()
 export class PromotionArticleService {
+  constructor(
+    private readonly articleService: ArticleService,
+    private readonly promotionService: PromotionService,
+  ) {}
+
   @InjectRepository(PromotionArticle)
   private readonly promotionArticleRepository: Repository<PromotionArticle>;
 
@@ -14,6 +21,15 @@ export class PromotionArticleService {
     const promoArti = this.promotionArticleRepository.create(
       createPromotionArticleDto,
     );
+
+    const article = await this.articleService.findOne(
+      createPromotionArticleDto.article_id,
+    );
+    const promotion = await this.promotionService.findOne(
+      createPromotionArticleDto.promotion_id,
+    );
+    promoArti.promotion = promotion;
+    promoArti.article = article;
     return await this.promotionArticleRepository.save(promoArti);
   }
 

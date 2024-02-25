@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreatePromotionDto {
   @IsNotEmpty({ message: 'beginDate is required' })
@@ -12,8 +12,4 @@ export class CreatePromotionDto {
   @IsNotEmpty({ message: 'description is required' })
   @IsString({ message: 'description is string' })
   description: string;
-
-  @IsNotEmpty({ message: 'promotionArticle_id is required' })
-  @IsNumber({}, { message: 'promotionArticle_id is number' })
-  promotionArticle_id: number;
 }

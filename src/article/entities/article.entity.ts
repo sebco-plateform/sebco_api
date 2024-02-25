@@ -47,10 +47,8 @@ export class Article {
   @OneToMany(() => OrderArticle, (orderAr) => orderAr.article)
   orderArticle: OrderArticle[];
 
-  @ManyToOne(() => PromotionArticle, (promoArt) => promoArt.article, {
-    nullable: true,
-  })
-  promotionArticle: PromotionArticle;
+  @OneToMany(() => PromotionArticle, (promoArt) => promoArt.article)
+  promotionArticle: PromotionArticle[];
 
   @OneToMany(() => Comment, (com) => com.article)
   comment: Comment[];

@@ -5,14 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Article } from './entities/article.entity';
 import { Repository } from 'typeorm';
 import { CategoryService } from '../category/category.service';
-import { PromotionArticleService } from '../promotion-article/promotion-article.service';
 
 @Injectable()
 export class ArticleService {
-  constructor(
-    private readonly categoryService: CategoryService,
-    private readonly promotionArticleService: PromotionArticleService,
-  ) {}
+  constructor(private readonly categoryService: CategoryService) {}
   @InjectRepository(Article)
   private readonly articleRepository: Repository<Article>;
   async create(createArticleDto: CreateArticleDto) {
@@ -22,18 +18,13 @@ export class ArticleService {
       createArticleDto.category_id,
     );
     article.category = cart;
-    if (createArticleDto.promotionArticle_id) {
-      const promoArti = await this.promotionArticleService.findOne(
-        createArticleDto.promotionArticle_id,
-      );
-      article.promotionArticle = promoArti;
-    }
+
     return await this.articleRepository.save(article);
   }
 
   async findAll() {
     return await this.articleRepository.find({
-      relations: ['category', 'promotionArticle'],
+      relations: ['category'],
     });
   }
 
