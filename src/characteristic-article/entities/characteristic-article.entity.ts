@@ -9,7 +9,7 @@ import {
 import { Article } from '../../article/entities/article.entity';
 import { Characteristic } from '../../characteristic/entities/characteristic.entity';
 
-@Entity()
+@Entity({ name: 'characteristicArticle' })
 export class CharacteristicArticle {
   @PrimaryGeneratedColumn()
   id: number;

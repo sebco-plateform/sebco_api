@@ -45,4 +45,34 @@ export class ArticleService {
     await this.articleRepository.remove(article);
     return article;
   }
+
+  async findArticleByCategory(id: number) {
+    const articles = await this.articleRepository
+      .createQueryBuilder()
+      .select('article', 'article')
+      .addSelect('category.id', 'category_id')
+      .from('article', 'article')
+      .innerJoin('article.category', 'category')
+      .where('category.id = :id', { id: id })
+      .groupBy('article.id')
+      .addGroupBy('category.id')
+      .getRawMany();
+
+    return articles;
+  }
+
+  async findArticleByCategoryName(name: string) {
+    const articles = await this.articleRepository
+      .createQueryBuilder()
+      .select('article', 'article')
+      .addSelect('category.id', 'category_id')
+      .from('article', 'article')
+      .innerJoin('article.category', 'category')
+      .where('category.catName = :catName', { catName: name })
+      .groupBy('article.id')
+      .addGroupBy('category.id')
+      .getRawMany();
+
+    return articles;
+  }
 }

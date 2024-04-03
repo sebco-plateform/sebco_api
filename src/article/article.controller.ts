@@ -30,6 +30,16 @@ export class ArticleController {
     return await this.articleService.findOne(+id);
   }
 
+  @Get('/articleByCategoryId/:id')
+  async findArticleByCategory(@Param('id') id: string) {
+    return await this.articleService.findArticleByCategory(+id);
+  }
+
+  @Get('/articleByCategoryName/:name')
+  async findArticleByCategoryName(@Param('name') name: string) {
+    return await this.articleService.findArticleByCategoryName(name);
+  }
+
   @Patch('/update/:id')
   async update(
     @Param('id') id: string,

@@ -25,6 +25,11 @@ export class ImageController {
     return await this.imageService.findAll();
   }
 
+  @Get('/articleImage/:id')
+  async findImageByArticle(@Param('id') id: string) {
+    return await this.imageService.findImageByArticleId(+id);
+  }
+
   @Get('/single/:id')
   async findOne(@Param('id') id: string) {
     return await this.imageService.findOne(+id);

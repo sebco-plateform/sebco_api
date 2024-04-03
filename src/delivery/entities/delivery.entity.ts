@@ -40,9 +40,6 @@ export class Delivery {
   @Column()
   latitude: string;
 
-  @Column()
-  status: string;
-
   @Column({ nullable: true })
   description: string;
 

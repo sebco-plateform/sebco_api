@@ -23,6 +23,9 @@ export class Order {
   @Column()
   totalPrice: number;
 
+  @Column()
+  status: string;
+
   @OneToMany(() => OrderArticle, (orderAr) => orderAr.order)
   orderArticle: OrderArticle[];
 

@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Image } from '../../image/entities/image.entity';
 import { Article } from '../../article/entities/article.entity';
 
 @Entity()
@@ -18,10 +17,10 @@ export class Category {
   catName: string;
 
   @Column()
-  description: string;
+  imageUrl: string;
 
-  @OneToMany(() => Image, (img) => img.category)
-  image: Image[];
+  @Column()
+  description: string;
 
   @OneToMany(() => Article, (arti) => arti.category)
   article: Article[];

@@ -1,5 +1,11 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
+enum RoleEnum {
+  ADMIN = 'admin',
+  SUPERADMIN = 'super_admin',
+  CUSTOMER = 'customer',
+  DRIVER = 'driver',
+}
 export class CreateUserDto {
   @IsNotEmpty({ message: 'the phone is required' })
   @IsNumber({}, { message: 'the phone is number' })
@@ -11,6 +17,7 @@ export class CreateUserDto {
 
   @IsNotEmpty({ message: 'is required' })
   @IsString({ message: 'is string' })
+  @IsEmail({}, { message: 'email not valide' })
   email: string;
 
   @IsNotEmpty({ message: 'is required' })
@@ -23,5 +30,5 @@ export class CreateUserDto {
 
   @IsNotEmpty({ message: 'is required' })
   @IsString({ message: 'is string' })
-  role: string;
+  role: RoleEnum;
 }

@@ -20,17 +20,21 @@ export class CharacteristicArticleService {
     const charatArticle = this.characteristicArticleRepositori.create(
       createCharacteristicArticleDto,
     );
-    const characteristic = await this.characteristicService.findOne(
-      createCharacteristicArticleDto.characteristic_id,
-    );
+    if (createCharacteristicArticleDto.characteristic_id) {
+      const characteristic = await this.characteristicService.findOne(
+        createCharacteristicArticleDto.characteristic_id,
+      );
+      charatArticle.characteristic = characteristic;
+    }
 
-    const article = await this.articleService.findOne(
-      createCharacteristicArticleDto.article_id,
-    );
+    if (createCharacteristicArticleDto.article_id) {
+      const article = await this.articleService.findOne(
+        createCharacteristicArticleDto.article_id,
+      );
+      charatArticle.article = article;
+    }
 
-    charatArticle.characteristic = characteristic;
-    charatArticle.article = article;
-    return await this.characteristicArticleRepositori.save(characteristic);
+    return await this.characteristicArticleRepositori.save(charatArticle);
   }
 
   async findAll() {
@@ -65,5 +69,23 @@ export class CharacteristicArticleService {
     const charac = await this.findOne(id);
     await this.characteristicArticleRepositori.remove(charac);
     return charac;
+  }
+
+  async findCharactByArticleId(id: number) {
+    const charact = await this.characteristicArticleRepositori
+      .createQueryBuilder()
+      .select('characteristicArticle', 'characteristicArticle')
+      .addSelect('characteristic', 'characteristic')
+      .addSelect('article', 'article')
+      .from('characteristicArticle', 'characteristicArticle')
+      .innerJoin('characteristicArticle.characteristic', 'characteristic')
+      .innerJoin('characteristicArticle.article', 'article')
+      .where('article.id = :id', { id: id })
+      .groupBy('characteristicArticle.id')
+      .addGroupBy('article.id')
+      .addGroupBy('characteristic.id')
+      .getMany();
+
+    return charact;
   }
 }

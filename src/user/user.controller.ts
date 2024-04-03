@@ -10,6 +10,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import LoginDto from './dto/login-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -25,9 +26,19 @@ export class UserController {
     return await this.userService.findAll();
   }
 
+  @Post('/login')
+  async login(@Body() loginDto: LoginDto) {
+    return await this.userService.login(loginDto);
+  }
+
   @Get('/single/:id')
   async findOne(@Param('id') id: string) {
     return await this.userService.findOne(+id);
+  }
+
+  @Get('/findUserByRole/:role')
+  async findUserByRole(@Param('role') role: string) {
+    return await this.userService.findUserByRole(role);
   }
 
   @Patch('/update/:id')

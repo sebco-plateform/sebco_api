@@ -19,19 +19,12 @@ export class ImageService {
 
   async create(createImageDto: CreateImageDto) {
     const image = this.imageRepository.create(createImageDto);
-    if (createImageDto.article_id) {
-      const article = await this.articleService.findOne(
-        createImageDto.article_id,
-      );
-      image.article = article;
-    }
 
-    if (createImageDto.category_id) {
-      const category = await this.categoryService.findOne(
-        createImageDto.article_id,
-      );
-      image.category = category;
-    }
+    const article = await this.articleService.findOne(
+      createImageDto.article_id,
+    );
+    image.article = article;
+
     return await this.imageRepository.save(image);
   }
 
@@ -58,6 +51,21 @@ export class ImageService {
   async remove(id: number) {
     const image = await this.findOne(id);
     await this.imageRepository.remove(image);
+    return image;
+  }
+
+  async findImageByArticleId(id: number) {
+    const image = await this.imageRepository
+      .createQueryBuilder()
+      .select('image', 'image')
+      .addSelect('article.id', 'article_id')
+      .from('image', 'image')
+      .innerJoin('image.article', 'article')
+      .where('article.id = :id', { id: id })
+      .groupBy('image.id')
+      .addGroupBy('article.id')
+      .getMany();
+
     return image;
   }
 }

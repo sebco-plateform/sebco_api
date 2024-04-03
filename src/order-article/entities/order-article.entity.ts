@@ -1,14 +1,8 @@
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Article } from '../../article/entities/article.entity';
 import { Order } from '../../order/entities/order.entity';
 
-@Entity()
+@Entity('orderArticle')
 export class OrderArticle {
   @PrimaryGeneratedColumn()
   id: number;

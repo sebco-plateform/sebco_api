@@ -42,10 +42,6 @@ export class CreateDeliveryDto {
   @IsString({ message: ' latitude is string' })
   latitude: string;
 
-  @IsNotEmpty({ message: 'the status is not empty' })
-  @IsString({ message: 'the status is string' })
-  status: string;
-
   @IsNotEmpty({ message: 'the description is not empty' })
   @IsString({ message: 'the description is string' })
   description: string;

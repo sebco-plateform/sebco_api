@@ -9,11 +9,6 @@ export class CreateImageDto {
   @IsString({ message: 'imageUrl is string' })
   imageUrl: string;
 
-  @IsNotEmpty({ message: 'category id is required' })
-  @IsNumber({}, { message: 'category id is number' })
-  @IsOptional()
-  category_id: number;
-
   @IsNotEmpty({ message: ' article_id is required' })
   @IsNumber({}, { message: ' article_id is number' })
   @IsOptional()
