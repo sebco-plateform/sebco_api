@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
+import { groupBy } from 'rxjs';
 
 @Injectable()
 export class OrderService {
@@ -53,4 +54,23 @@ export class OrderService {
     await this.orderRepository.remove(order);
     return order;
   }
+
+  //function to get order by user
+  async findOrderByUser(id: number) {
+    const orders = await this.orderRepository
+    .createQueryBuilder()
+    .select('order', 'order')
+    .addSelect('user', 'user')
+    .addSelect('delivery', 'delivery')
+    .from('order', 'order')
+    .innerJoin('order.user', 'user')
+    .innerJoin('order.delivery', 'delivery')
+    .where('user.id = :id', { id: id })
+    .groupBy('order.id')
+    .addGroupBy('user.id')
+    .addGroupBy('delivery.id')
+    .getRawMany();
+
+    return orders;
+   }
 }
