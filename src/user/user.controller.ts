@@ -31,6 +31,16 @@ export class UserController {
     return await this.userService.login(loginDto);
   }
 
+  @Post('/phoneVerification')
+  async phoneVerification(@Body() phone: {phone: number}) {
+    return await this.userService.phoneVerivication(phone)
+  }
+
+  @Post('/passwordVerification')
+  async passwordVerification(@Body() passwords: {password: string, passwordExist: string}) {
+    return await this.userService.verificationPassword(passwords)
+  }
+
   @Get('/single/:id')
   async findOne(@Param('id') id: string) {
     return await this.userService.findOne(+id);

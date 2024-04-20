@@ -76,4 +76,22 @@ export class OrderArticleService {
 
     return items;
   }
+
+  async findItemsByCustomer(id: number) {
+    const items = await this.orderArticleRepository
+      .createQueryBuilder()
+      .select('orderArticle', 'orderArticle')
+      .addSelect('article', 'article')
+      .addSelect('order', 'order')
+      .from('orderArticle', 'orderArticle')
+      .innerJoin('orderArticle.article', 'article')
+      .innerJoin('orderArticle.order', 'order')
+      .where('order.user.id = :id', { id: id })
+      .groupBy('orderArticle.id')
+      .addGroupBy('order.id')
+      .addGroupBy('article.id')
+      .getRawMany();
+
+    return items;
+  }
 }

@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import LoginDto from './dto/login-user.dto';
+import { truncate } from 'fs';
 
 @Injectable()
 export class UserService {
@@ -38,6 +39,32 @@ export class UserService {
     const user = await this.findOne(id);
     await this.userRepository.remove(user);
     return user;
+  }
+
+  //phone verification
+  async phoneVerivication(phone: {phone: number}) {
+    const userLog = await this.userRepository.find({
+      where: { phone: phone.phone },
+      select: ['id', 'phone', 'password', 'role'],
+    });
+    if(userLog.length > 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  //password verification
+  async verificationPassword(passwords: {password: string, passwordExist: string}) {
+    const com = await bcrypt.compare(passwords.password, passwords.passwordExist);
+    if (com) {
+      return true;
+    }
+    else {
+      return false;
+    }
+    
   }
 
   /** login function */

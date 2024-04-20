@@ -35,6 +35,11 @@ export class OrderArticleController {
     return await this.orderArticleService.findItemsByOrder(+id);
   }
 
+  @Get('/findByCustomer/:id')
+  async findItemsByCustomer(@Param('id') id: string) {
+    return await this.orderArticleService.findItemsByCustomer(+id);
+  }
+
   @Patch('/update/:id')
   async update(
     @Param('id') id: string,

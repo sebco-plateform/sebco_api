@@ -50,12 +50,12 @@ config();
       inject: [ConfigService],
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => ({
         type: 'postgres',
-        url: configService.get<string>('psql'),
-        /* host: configService.get<string>('DB_HOST'),
+        //url: configService.get<string>('psql'),
+        host: configService.get<string>('DB_HOST'),
         port: configService.get<number>('BD_PORT'),
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_DATABASE'),*/
+        database: configService.get<string>('DB_DATABASE'),
         entities: [
           Article,
           Category,
@@ -78,12 +78,12 @@ config();
         ],
 
         synchronize: true,
-        ssl: false,
+        /*ssl: true,
         extra: {
           ssl: {
             rejectUnauthorized: false,
           },
-        },
+        },*/
       }),
     }),
     CategoryModule,
