@@ -36,6 +36,11 @@ export class UserController {
     return await this.userService.phoneVerivication(phone)
   }
 
+  @Post('/emailVerification')
+  async emailVerification(@Body() email: {email: string}) {
+    return await this.userService.emailVerivication(email)
+  }
+
   @Post('/passwordVerification')
   async passwordVerification(@Body() passwords: {password: string, passwordExist: string}) {
     return await this.userService.verificationPassword(passwords)
@@ -49,6 +54,11 @@ export class UserController {
   @Get('/findUserByRole/:role')
   async findUserByRole(@Param('role') role: string) {
     return await this.userService.findUserByRole(role);
+  }
+
+  @Get('/findUserByEmail/:email')
+  async findUserByEmail(@Param('email') email: string) {
+    return await this.userService.findUserByEmail(email);
   }
 
   @Patch('/update/:id')

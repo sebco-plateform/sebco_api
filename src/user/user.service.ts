@@ -55,6 +55,16 @@ export class UserService {
     }
   }
 
+  //email verification
+  async emailVerivication(email: {email: string}) {
+    const userLog = await this.userRepository.find({
+      where: { email: email.email },
+    });
+    if(userLog.length > 0) {
+      return userLog[0];
+    }
+  }
+
   //password verification
   async verificationPassword(passwords: {password: string, passwordExist: string}) {
     const com = await bcrypt.compare(passwords.password, passwords.passwordExist);
@@ -99,5 +109,13 @@ export class UserService {
     });
 
     return user;
+  }
+
+  async findUserByEmail(email: string) {
+    const user = await this.userRepository.find({
+      where: { email: email },
+    });
+
+    return user[0];
   }
 }
