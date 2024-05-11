@@ -6,6 +6,7 @@ import { ArticleService } from 'src/article/article.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderArticle } from './entities/order-article.entity';
 import { Repository } from 'typeorm';
+import { Article } from 'src/article/entities/article.entity';
 
 @Injectable()
 export class OrderArticleService {
@@ -59,6 +60,24 @@ export class OrderArticleService {
     return orderArt;
   }
 
+  async findByOrderStatus(status: string) {
+    const items = await this.orderArticleRepository
+      .createQueryBuilder()
+      .select('orderArticle', 'orderArticle')
+      .addSelect('article', 'article')
+      .addSelect('order', 'order')
+      .from('orderArticle', 'orderArticle')
+      .innerJoin('orderArticle.article', 'article')
+      .innerJoin('orderArticle.order', 'order')
+      .where('order.status = :status', { status: status })
+      .groupBy('orderArticle.id')
+      .addGroupBy('order.id')
+      .addGroupBy('article.id')
+      .getRawMany();
+
+    return items;
+  }
+
   async findItemsByOrder(id: number) {
     const items = await this.orderArticleRepository
       .createQueryBuilder()
@@ -93,5 +112,22 @@ export class OrderArticleService {
       .getRawMany();
 
     return items;
+  }
+
+  async getArticleMostSell() {
+    const articles = await this.orderArticleRepository
+      .createQueryBuilder()
+      .select('orderArticle.articleId', 'articleId')
+      .addSelect('COUNT(*)', 'total_purchases')
+      .from('orderArticle', 'orderArticle')
+      .addSelect('article.articleName', 'article_name')
+      .leftJoin(Article, 'article', 'article.id = orderArticle.articleId')
+      .groupBy('orderArticle.articleId')
+      .addGroupBy('article.articleName')
+      .orderBy('total_purchases', 'DESC')
+      .limit(20)
+      .getRawMany();
+
+    return articles;
   }
 }

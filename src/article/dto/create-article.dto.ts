@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateArticleDto {
   @IsNotEmpty({ message: 'article name required!' })
@@ -20,4 +26,12 @@ export class CreateArticleDto {
   @IsNotEmpty({ message: 'the category id is required' })
   @IsNumber({}, { message: 'the category id is a number!' })
   category_id: number;
+
+  @IsOptional()
+  @IsBoolean({ message: 'is an boolean' })
+  isActive: boolean;
+
+  @IsOptional()
+  @IsBoolean({ message: 'is an boolean' })
+  isVisible: boolean;
 }

@@ -15,7 +15,11 @@ export class CategoryService {
   }
 
   async findAll() {
-    return await this.categoryRepository.find();
+    return await this.categoryRepository.find({ where: { isVisible: true } });
+  }
+
+  async findAllDisable() {
+    return await this.categoryRepository.find({ where: { isVisible: false } });
   }
 
   async findOne(id: number) {

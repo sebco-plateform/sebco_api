@@ -31,6 +31,12 @@ export class Comment {
   })
   order: Order;
 
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Column({ default: true })
+  isVisible: boolean;
+
   @ManyToOne(() => Article, (art) => art.comment, {
     nullable: true,
   })

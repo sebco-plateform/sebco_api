@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateCommentDto {
   @IsNotEmpty({ message: 'message is not empety' })
@@ -27,4 +27,12 @@ export class CreateCommentDto {
   @IsOptional()
   @IsNumber({}, { message: 'id is not empty' })
   person_id: number;
+
+  @IsOptional()
+  @IsBoolean({ message: 'is an boolean' })
+  isActive: boolean;
+
+  @IsOptional()
+  @IsBoolean({ message: 'is an boolean' })
+  isVisible: boolean;
 }

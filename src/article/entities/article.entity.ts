@@ -35,6 +35,12 @@ export class Article {
   @ManyToOne(() => Category, (cat) => cat.article)
   category: Category;
 
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Column({ default: true })
+  isVisible: boolean;
+
   @OneToMany(() => Image, (img) => img.article)
   image: Image[];
 

@@ -25,6 +25,12 @@ export class Category {
   @OneToMany(() => Article, (arti) => arti.category)
   article: Article[];
 
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Column({ default: true })
+  isVisible: boolean;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',

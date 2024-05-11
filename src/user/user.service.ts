@@ -6,7 +6,6 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import LoginDto from './dto/login-user.dto';
-import { truncate } from 'fs';
 
 @Injectable()
 export class UserService {
@@ -20,7 +19,11 @@ export class UserService {
   }
 
   async findAll() {
-    return await this.userRepository.find();
+    return await this.userRepository.find({ where: { isVisible: true } });
+  }
+
+  async findDisable() {
+    return await this.userRepository.find({ where: { isVisible: false } });
   }
 
   async findOne(id: number) {
@@ -42,46 +45,49 @@ export class UserService {
   }
 
   //phone verification
-  async phoneVerivication(phone: {phone: number}) {
+  async phoneVerivication(phone: { phone: number }) {
     const userLog = await this.userRepository.find({
-      where: { phone: phone.phone },
+      where: { phone: phone.phone, isActive: true },
       select: ['id', 'phone', 'password', 'role'],
     });
-    if(userLog.length > 0) {
+    if (userLog.length > 0) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
 
   //email verification
-  async emailVerivication(email: {email: string}) {
+  async emailVerivication(email: { email: string }) {
     const userLog = await this.userRepository.find({
-      where: { email: email.email },
+      where: { email: email.email, isActive: true },
     });
-    if(userLog.length > 0) {
+    if (userLog.length > 0) {
       return userLog[0];
     }
   }
 
   //password verification
-  async verificationPassword(passwords: {password: string, passwordExist: string}) {
-    const com = await bcrypt.compare(passwords.password, passwords.passwordExist);
+  async verificationPassword(passwords: {
+    password: string;
+    passwordExist: string;
+  }) {
+    const com = await bcrypt.compare(
+      passwords.password,
+      passwords.passwordExist,
+    );
     if (com) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
-    
   }
 
   /** login function */
   async login(loginDto: LoginDto) {
     const phone = loginDto.phone;
     const userLog = await this.userRepository.find({
-      where: { phone: phone },
+      where: { phone: phone, isActive: true },
       select: ['id', 'phone', 'password', 'role'],
     });
     if (userLog.length > 0) {
@@ -105,7 +111,7 @@ export class UserService {
 
   async findUserByRole(role: string) {
     const user = await this.userRepository.find({
-      where: { role: role },
+      where: { role: role, isVisible: true },
     });
 
     return user;
@@ -113,7 +119,7 @@ export class UserService {
 
   async findUserByEmail(email: string) {
     const user = await this.userRepository.find({
-      where: { email: email },
+      where: { email: email, isActive: true },
     });
 
     return user[0];

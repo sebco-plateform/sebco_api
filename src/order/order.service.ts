@@ -6,7 +6,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
-import { groupBy } from 'rxjs';
 
 @Injectable()
 export class OrderService {
@@ -36,6 +35,13 @@ export class OrderService {
     });
   }
 
+  async findByStatus(status: string) {
+    return await this.orderRepository.find({
+      relations: ['user', 'delivery'],
+      where: { status: status },
+    });
+  }
+
   async findOne(id: number) {
     const order = await this.orderRepository.findOneBy({ id });
 
@@ -58,19 +64,50 @@ export class OrderService {
   //function to get order by user
   async findOrderByUser(id: number) {
     const orders = await this.orderRepository
-    .createQueryBuilder()
-    .select('order', 'order')
-    .addSelect('user', 'user')
-    .addSelect('delivery', 'delivery')
-    .from('order', 'order')
-    .innerJoin('order.user', 'user')
-    .innerJoin('order.delivery', 'delivery')
-    .where('user.id = :id', { id: id })
-    .groupBy('order.id')
-    .addGroupBy('user.id')
-    .addGroupBy('delivery.id')
-    .getRawMany();
+      .createQueryBuilder()
+      .select('order', 'order')
+      .addSelect('user', 'user')
+      .addSelect('delivery', 'delivery')
+      .from('order', 'order')
+      .innerJoin('order.user', 'user')
+      .innerJoin('order.delivery', 'delivery')
+      .where('user.id = :id', { id: id })
+      .groupBy('order.id')
+      .addGroupBy('user.id')
+      .addGroupBy('delivery.id')
+      .getRawMany();
 
     return orders;
-   }
+  }
+
+  async getOrderByMonth() {
+    const orders = await this.orderRepository
+      .createQueryBuilder()
+      .select(`TO_CHAR(order.created_at, 'Mon')`, 'month')
+      .addSelect('COUNT(*)', 'total_order')
+      .from('order', 'order')
+      .groupBy(`TO_CHAR(order.created_at, 'Mon')`)
+      .orderBy('month')
+      .getRawMany();
+
+    return orders;
+  }
+
+  async getTopBuyingClients() {
+    const customers = await this.orderRepository
+      .createQueryBuilder()
+      .select('order.userId', 'userId')
+      .addSelect('COUNT(*)', 'total_orders')
+      .from('order', 'order')
+      .innerJoin('order.user', 'user')
+      .addSelect('user.firstName', 'user_firstName')
+      .addSelect('user.lastName', 'user_lastName')
+      .groupBy('order.userId')
+      .addGroupBy('user.firstName')
+      .addGroupBy('user.lastName')
+      .orderBy('total_orders', 'DESC')
+      .limit(20)
+      .getRawMany();
+    return customers;
+  }
 }

@@ -25,7 +25,22 @@ export class OrderController {
     return await this.orderService.findAll();
   }
 
-  @Get('/single/:id')
+  @Get('/getTopBuyingClients')
+  async getTopBuyingClients() {
+    return await this.orderService.getTopBuyingClients();
+  }
+
+  @Get('/getOrderByMonth')
+  async getOrderByMonth() {
+    return await this.orderService.getOrderByMonth();
+  }
+
+  @Get('/single/:status')
+  async findByStatus(@Param('status') status: string) {
+    return await this.orderService.findByStatus(status);
+  }
+
+  @Get('/findByStatus/:id')
   async findOne(@Param('id') id: string) {
     return await this.orderService.findOne(+id);
   }

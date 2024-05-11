@@ -26,6 +26,12 @@ export class User {
   @Column()
   role: string;
 
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Column({ default: true })
+  isVisible: boolean;
+
   @OneToMany(() => Order, (order) => order.user)
   order: Order[];
 

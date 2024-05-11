@@ -25,9 +25,19 @@ export class OrderArticleController {
     return await this.orderArticleService.findAll();
   }
 
+  @Get('/getArticleMostSell')
+  async getArticleMostSell() {
+    return await this.orderArticleService.getArticleMostSell();
+  }
+
   @Get('/single/:id')
   async findOne(@Param('id') id: string) {
     return await this.orderArticleService.findOne(+id);
+  }
+
+  @Get('/findByOrderStatus/:status')
+  async findByOrderStatus(@Param('status') status: string) {
+    return await this.orderArticleService.findByOrderStatus(status);
   }
 
   @Get('/findByOrder/:id')

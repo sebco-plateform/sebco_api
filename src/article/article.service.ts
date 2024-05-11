@@ -25,6 +25,7 @@ export class ArticleService {
   async findAll() {
     return await this.articleRepository.find({
       relations: ['category'],
+      where: { isVisible: true },
     });
   }
 
@@ -54,6 +55,7 @@ export class ArticleService {
       .from('article', 'article')
       .innerJoin('article.category', 'category')
       .where('category.id = :id', { id: id })
+      .andWhere('article.isVisible= : value', { value: true })
       .groupBy('article.id')
       .addGroupBy('category.id')
       .getRawMany();
@@ -69,6 +71,7 @@ export class ArticleService {
       .from('article', 'article')
       .innerJoin('article.category', 'category')
       .where('category.catName = :catName', { catName: name })
+      .andWhere('article.isVisible= : value', { value: true })
       .groupBy('article.id')
       .addGroupBy('category.id')
       .getRawMany();

@@ -22,6 +22,12 @@ export class Characteristic {
   @OneToMany(() => CharacteristicArticle, (chart) => chart.characteristic)
   characteristicArticle: CharacteristicArticle[];
 
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Column({ default: true })
+  isVisible: boolean;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',

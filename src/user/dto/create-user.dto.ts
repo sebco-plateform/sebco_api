@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 enum RoleEnum {
   ADMIN = 'admin',
@@ -31,4 +31,12 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'is required' })
   @IsString({ message: 'is string' })
   role: RoleEnum;
+
+  @IsOptional()
+  @IsBoolean({ message: 'is an boolean' })
+  isActive: boolean;
+
+  @IsOptional()
+  @IsBoolean({ message: 'is an boolean' })
+  isVisible: boolean;
 }

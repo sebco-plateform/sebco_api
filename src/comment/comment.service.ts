@@ -61,6 +61,14 @@ export class CommentService {
   async findAll() {
     return await this.commentRepository.find({
       relations: ['promotionArticle', 'user', 'order', 'article', 'person'],
+      where: { isVisible: true },
+    });
+  }
+
+  async findDisable() {
+    return await this.commentRepository.find({
+      relations: ['promotionArticle', 'user', 'order', 'article', 'person'],
+      where: { isVisible: false },
     });
   }
 

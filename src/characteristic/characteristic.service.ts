@@ -19,7 +19,15 @@ export class CharacteristicService {
   }
 
   async findAll() {
-    return await this.characteristicRepository.find();
+    return await this.characteristicRepository.find({
+      where: { isVisible: true },
+    });
+  }
+
+  async findDisable() {
+    return await this.characteristicRepository.find({
+      where: { isVisible: false },
+    });
   }
 
   async findOne(id: number) {
