@@ -78,6 +78,7 @@ config();
         ],
 
         synchronize: true,
+        dropSchema:true,
         ssl: true,
         extra: {
           ssl: {
